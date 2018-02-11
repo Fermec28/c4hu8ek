@@ -16,7 +16,7 @@ class Api::V1::PinsController < ApplicationController
 
   def require_login
     user= User.find_by(email: request.headers["X-User-Email"])    
-    unless user[:api_token] == request.headers["X-Api-Token"]
+    unless user.api_token == request.headers["X-Api-Token"]
        head 401
      end 
   end
