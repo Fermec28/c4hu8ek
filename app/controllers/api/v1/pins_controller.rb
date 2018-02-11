@@ -1,4 +1,6 @@
 class Api::V1::PinsController < ApplicationController
+  before_action :require_login
+
   def index
     render json: Pin.all.order('created_at DESC')
   end
@@ -10,6 +12,13 @@ class Api::V1::PinsController < ApplicationController
     else
       render json: { errors: pin.errors }, status: 422
     end
+  end
+
+  def require_login
+    user= User.find_by(email: request.headers["X-User-Email"])    
+    unless user[:api_token] == request.headers["X-Api-Token"]
+       head 401
+     end 
   end
 
   private
